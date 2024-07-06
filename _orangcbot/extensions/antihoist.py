@@ -1,16 +1,15 @@
 from __future__ import annotations
 
-from datetime import datetime
 import logging
 from string import ascii_letters
 from typing import TYPE_CHECKING, Final
 
-from nextcord import HTTPException, Permissions, user_command, Interaction, Member
-from nextcord.ext import commands, application_checks as ac
+from nextcord import Interaction, Member, user_command
+from nextcord.ext import application_checks as ac
+from nextcord.ext import commands
 
 if TYPE_CHECKING:
     import nextcord
-    from nextcord import AutoModerationActionExecution
 
 
 NUMBERS: Final[str] = "1234567890"
