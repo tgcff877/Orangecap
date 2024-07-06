@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Dict, List
+from typing import TYPE_CHECKING, Dict, List
 
 import nextcord
 from nextcord.ext import commands
@@ -57,6 +57,9 @@ _faq_answer: Dict[str, _QA] = {
 
 
 class FAQDropdown(nextcord.ui.Select):
+    if TYPE_CHECKING:
+        _message: nextcord.Message | nextcord.PartialInteractionMessage
+
     def __init__(self):
         options: List[nextcord.SelectOption] = [
             nextcord.SelectOption(
@@ -94,10 +97,11 @@ class FAQDropdown(nextcord.ui.Select):
             ),
         ]
         super().__init__(placeholder="Select your question.", options=options)
-        self._message: nextcord.Message = None
 
-    def update_msg(self, message: nextcord.Message | nextcord.InteractionMessage):
-        self._message: nextcord.Message | nextcord.InteractionMessage = message
+    def update_msg(
+        self, message: nextcord.Message | nextcord.PartialInteractionMessage
+    ):
+        self._message: nextcord.Message | nextcord.PartialInteractionMessage = message
 
     async def callback(self, interaction: nextcord.Interaction):
         await interaction.response.defer()
