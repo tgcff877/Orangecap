@@ -40,7 +40,7 @@ def construct_embed(url: str, answer: str, record_type: str):
 
 class DigDropdown(nextcord.ui.Select):
     if TYPE_CHECKING:
-        _message: nextcord.Message
+        _message: nextcord.Message | nextcord.PartialInteractionMessage
 
     def __init__(self, url: str):
         options = [
@@ -53,13 +53,16 @@ class DigDropdown(nextcord.ui.Select):
             DigSelectOption("PTR"),
         ]
         self._url: str = url
-        super().__init__(options=options, placeholder="What records do you want?")
+        super().__init__(options=options, placeholder="What records do you want?")  # type: ignore -- perfectly compatible!
 
     async def callback(self, interaction: nextcord.Interaction):
         await interaction.response.defer()
+
+        assert interaction.data is not None
+        assert "values" in interaction.data
         try:
             answers = _dnsresolver.resolve(self._url, interaction.data["values"][0])
-            answer = "\n".join([str(ans) for ans in answers])
+            answer = "\n".join([str(ans) for ans in answers])  # type: ignore
         except _dnsresolver.NoAnswer:
             answer = "NOT FOUND"
         await self._message.edit(
@@ -67,7 +70,7 @@ class DigDropdown(nextcord.ui.Select):
         )
 
     def update_msg(self, msg: nextcord.Message):
-        self._message: nextcord.Message = msg
+        self._message: nextcord.Message | nextcord.PartialInteractionMessage = msg
 
 
 class DNSView(nextcord.ui.View):
@@ -91,10 +94,11 @@ class DNSView(nextcord.ui.View):
         self, msg: nextcord.Message | nextcord.PartialInteractionMessage
     ) -> None:
         self._message = msg
-        self.dropdown.update_msg(msg)
+        self.dropdown.update_msg(msg)  # type: ignore
 
     async def on_timeout(self):
         for child in self.children:
+            assert isinstance(child, nextcord.ui.Button)
             child.disabled = True
         await self._message.edit(view=self)
 
@@ -108,7 +112,7 @@ class DNS(commands.Cog):
         """Dig an URL for its DNS records. Default to CNAME, if you want other then select in the dropdown."""
         try:
             answers = _dnsresolver.resolve(url, "CNAME")
-            answer = "\n".join([str(ans) for ans in answers])
+            answer = "\n".join([str(ans) for ans in answers])  # type: ignore -- those are subscriptable
         except _dnsresolver.NoAnswer:
             answer = "NOT FOUND"
         except _dnsresolver.NXDOMAIN:
@@ -130,7 +134,7 @@ class DNS(commands.Cog):
         """Dig an URL for its DNS records. Default to CNAME, if you want other things then please choose in the dropdown provided later."""
         try:
             answers = _dnsresolver.resolve(url, "CNAME")
-            answer = "\n".join([str(ans) for ans in answers])
+            answer = "\n".join([str(ans) for ans in answers])  # type: ignore -- those are subscriptible
         except _dnsresolver.NoAnswer:
             answer = "NOT FOUND"
         except _dnsresolver.NXDOMAIN:

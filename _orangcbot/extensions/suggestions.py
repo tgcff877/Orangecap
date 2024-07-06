@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from contextlib import suppress
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal, cast
 
 from nextcord import (
     Colour,
@@ -9,6 +9,7 @@ from nextcord import (
     Interaction,
     Message,
     SlashOption,
+    TextChannel,
     TextInputStyle,
     message_command,
     slash_command,
@@ -41,7 +42,7 @@ class ApproveOrDeny(ui.Modal):
     async def callback(self, interaction: Interaction) -> None:
         embed = self._suggestion_msg.embeds[0]
         embed.add_field(
-            name=f"{'Approved by' if self._mode else 'Denied by'} {interaction.user.display_name}",
+            name=f"{'Approved by' if self._mode else 'Denied by'} {interaction.user.name}",
             value=self.reas.value,
         )
         await self._suggestion_msg.edit(embed=embed)
@@ -75,7 +76,7 @@ class Suggestion(commands.Cog):
         await interaction.response.send_modal(ApproveOrDeny(False, message))
 
     @slash_command(name="suggestion")
-    async def _suggestion(self, interaction: Interaction):
+    async def _suggestion(self, interaction: Interaction):  # type: ignore[reportUnusedVariable]
         pass
 
     @_suggestion.subcommand(
@@ -91,6 +92,9 @@ class Suggestion(commands.Cog):
             name="suggestion", description="Write your suggestion here.", required=True
         ),
     ):
+        embed: Embed
+
+        for_ = cast(Literal["the server", "the service"], for_)
         if for_ == "the server":
             embed = Embed(
                 title="Server Suggestion", description=suggestion, colour=Colour.red()
@@ -99,7 +103,7 @@ class Suggestion(commands.Cog):
                 text=f"By {str(interaction.user)} (ID {interaction.user.id})"
             )
 
-        if for_ == "the service":
+        elif for_ == "the service":
             embed = Embed(
                 title="Service Suggestion", description=suggestion, colour=Colour.red()
             )
@@ -107,11 +111,18 @@ class Suggestion(commands.Cog):
                 text=f"By {str(interaction.user)} (ID {interaction.user.id})"
             )
 
+        else:
+            await interaction.send(
+                "Well, what do you want to suggest for? Use your brain and let autocomplete guide you."
+            )
+
         channel = interaction.guild.get_channel(self.suggestion_channel)
-        message = await channel.send(embed=embed)
+        channel = cast(TextChannel, channel)
+        message = await channel.send(embed=embed)  # type: ignore
         await message.add_reaction("✅")
         await message.add_reaction("❌")
         log_channel = self.bot.get_channel(955105139461607444)
+        log_channel = cast(TextChannel, log_channel)
         await log_channel.send(f"{str(interaction.user)} has suggested {suggestion}.")
         await interaction.send(
             f"You can now see your suggestion in {channel.mention}.",
@@ -146,6 +157,7 @@ class Suggestion(commands.Cog):
         ),
     ):
         channel = interaction.guild.get_channel(self.suggestion_channel)
+        channel = cast(TextChannel, channel)
         message = await channel.fetch_message(int(messageId))
         embed = message.embeds[0]
         new_embed = embed.add_field(
@@ -171,6 +183,7 @@ class Suggestion(commands.Cog):
         if not why:
             why = "No reason provided"
         channel = self.bot.get_channel(self.suggestion_channel)
+        channel = cast(TextChannel, channel)
         message = await channel.fetch_message(int(messageId))
         embed = message.embeds[0]
         new_embed = embed.add_field(

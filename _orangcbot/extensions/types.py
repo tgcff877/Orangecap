@@ -16,12 +16,18 @@ class _OwnerObject(TypedDict):
     twitter: NotRequired[str]
 
 
-class _RecordObject(TypedDict, total=False):
+class _OtherRecordObject(TypedDict, total=False):
     A: List[str]
-    CNAME: str
     URL: str
     TXT: Union[str, List[str]]
     MX: List[str]
+
+
+class _CNAMERecordObject(TypedDict):
+    CNAME: str
+
+
+_RecordObject = Union[_OtherRecordObject, _CNAMERecordObject]
 
 
 class Domain(TypedDict):
