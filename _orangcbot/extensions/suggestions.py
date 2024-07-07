@@ -42,7 +42,7 @@ class ApproveOrDeny(ui.Modal):
     async def callback(self, interaction: Interaction) -> None:
         embed = self._suggestion_msg.embeds[0]
         embed.add_field(
-            name=f"{'Approved by' if self._mode else 'Denied by'} {interaction.user.name}",
+            name=f"{'Approved by' if self._mode else 'Denied by'} {str(interaction.user)}",
             value=self.reas.value,
         )
         await self._suggestion_msg.edit(embed=embed)
