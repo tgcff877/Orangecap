@@ -9,7 +9,7 @@ load_dotenv()
 import os
 
 import nextcord
-from nextcord import ApplicationError, Intents
+from nextcord import ApplicationError, Game, Intents
 from nextcord.ext import application_checks as ac
 from nextcord.ext import commands, help_commands  # type: ignore
 
@@ -81,6 +81,7 @@ bot = OrangcBot(
     case_insensitive=True,
     owner_ids=owner_ids,
     allowed_mentions=nextcord.AllowedMentions.none(),
+    activity=Game("Busy being a Barbie Girl"),
 )
 # @bot.event
 # async def on_command_error(ctx, error):
