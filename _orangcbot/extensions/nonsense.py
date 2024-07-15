@@ -5,7 +5,8 @@ from typing import TYPE_CHECKING, Optional
 
 import aiohttp
 import nextcord
-from nextcord import HTTPException, Interaction, SlashOption, slash_command
+from nextcord import HTTPException, Interaction, Object, SlashOption, slash_command
+from nextcord.ext import application_checks as ac
 from nextcord.ext import commands
 
 from .converters import (
@@ -289,6 +290,23 @@ class Nonsense(commands.Cog):
 class NonsenseSlash(commands.Cog):
     def __init__(self, bot: commands.Bot) -> None:
         self._bot: commands.Bot = bot
+
+    @nextcord.slash_command()
+    @ac.is_owner()
+    async def make_degen(
+        self,
+        interaction: Interaction,
+        user: nextcord.Member = SlashOption(
+            description="The degen-like user.", required=True
+        ),
+        reason=SlashOption(
+            description="Why this person should be a degen? Idrk.", required=True
+        ),
+    ) -> None:
+        await user.add_roles(Object(id=1238746465111642122), reason=reason)
+        await interaction.send(
+            f"Master, I have made {str(user)} to be a degenerate. I'm sorry for all your loss, Master."
+        )
 
     @nextcord.slash_command()
     async def ban(
