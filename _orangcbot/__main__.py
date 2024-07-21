@@ -108,7 +108,7 @@ bot.load_extension("extensions.archwiki")
 bot.load_extension("extensions.github")
 bot.load_extension("extensions.swiftie")
 bot.load_extension("extensions.oneword")
-bot.load_extension("extensions.stars")
+# bot.load_extension("extensions.stars")
 bot.load_extension("extensions.ping_cutedog")
 bot.load_extension("extensions.chatbot")
 if os.getenv("HASDB"):
