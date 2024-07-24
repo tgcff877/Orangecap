@@ -81,7 +81,7 @@ bot = OrangcBot(
     case_insensitive=True,
     owner_ids=owner_ids,
     allowed_mentions=nextcord.AllowedMentions.none(),
-    activity=Game("Busy being a Barbie Girl"),
+    activity=Game("Busy serving my only real Master, MaskDuck."),
 )
 # @bot.event
 # async def on_command_error(ctx, error):
