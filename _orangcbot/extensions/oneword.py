@@ -33,7 +33,7 @@ class Oneword(commands.Cog):
         )
 
         # r = await self.check_if_sending_consecutive_messages(ONEWORD_CHANNEL)
-        if " " in message.content or "\n" in message.content:
+        if " " in message.content or "\n" in message.content or "⠀" in message.content:
             await message.delete()
             s = await message.channel.send(
                 "Message which have space(s) or newlines are not allowed."
