@@ -81,7 +81,7 @@ bot = OrangcBot(
     case_insensitive=True,
     owner_ids=owner_ids,
     allowed_mentions=nextcord.AllowedMentions.none(),
-    activity=Game("Busy being a Barbie Girl"),
+    activity=Game("Busy serving my only real Master, MaskDuck."),
 )
 # @bot.event
 # async def on_command_error(ctx, error):
@@ -108,6 +108,7 @@ bot.load_extension("extensions.archwiki")
 bot.load_extension("extensions.github")
 bot.load_extension("extensions.swiftie")
 bot.load_extension("extensions.oneword")
+bot.load_extension("extensions.docs")
 # bot.load_extension("extensions.stars")
 bot.load_extension("extensions.ping_cutedog")
 bot.load_extension("extensions.chatbot")

@@ -1,11 +1,18 @@
 from __future__ import annotations
 
 import re
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Optional, cast
 
 import aiohttp
 import nextcord
-from nextcord import HTTPException, Interaction, Object, SlashOption, slash_command
+from nextcord import (
+    HTTPException,
+    Interaction,
+    Object,
+    SlashOption,
+    TextChannel,
+    slash_command,
+)
 from nextcord.ext import application_checks as ac
 from nextcord.ext import commands
 
@@ -300,12 +307,21 @@ class NonsenseSlash(commands.Cog):
             description="The degen-like user.", required=True
         ),
         reason=SlashOption(
-            description="Why this person should be a degen? Idrk.", required=True
+            description="Why this person should be a degen? Idrk.", required=False
         ),
     ) -> None:
+
+        if reason is None:
+            reason = "annoying my Master"
         await user.add_roles(Object(id=1238746465111642122), reason=reason)
+        LOG_CHANNEL = cast(
+            TextChannel, interaction.guild.get_channel(955105139461607444)
+        )
+        await LOG_CHANNEL.send(
+            f"My Master, MaskDuck, has made {str(user)} (ID {user.id}) for reason {reason}"
+        )
         await interaction.send(
-            f"Master, I have made {str(user)} to be a degenerate. I'm sorry for all your loss, Master."
+            f"Master, I have made {str(user)} a degenerate for {reason}. I'm sorry for all your loss, Master."
         )
 
     @nextcord.slash_command()
