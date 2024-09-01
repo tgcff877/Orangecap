@@ -24,6 +24,7 @@ DEALINGS IN THE SOFTWARE.
 
 # taken from https://github.com/nextcord/previous/blob/master/cogs/discorddoc.py
 from typing import Any
+
 import nextcord
 from algoliasearch.search_client import SearchClient
 from nextcord.ext import commands
